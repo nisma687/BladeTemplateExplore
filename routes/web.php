@@ -19,3 +19,4 @@ Route::get('/', function () {
 });
 
 Route::resource('students', StudentController::class);
+Route::put('/students/restore/{id}', [StudentController::class, 'restore'])->name('students.restore');

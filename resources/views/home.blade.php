@@ -25,6 +25,7 @@
                     <th>Class</th>
                     <th>Delete User</th>
                     <th>Update User</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -34,17 +35,28 @@
                         <td>{{ $stu->course }}</td>
                         <td>{{ $stu->class }}</td>
                         <td>
-                        <form 
-                        action="{{ url('/students', ['id' => $stu->id]) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                        <form action="{{ url('/students', ['id' => $stu->id]) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        @if($stu->deleted_at === null)
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        @endif
                         </form>
+
+                        @if($stu->deleted_at !== null)
+                        <form action="{{ url('/students/restore', ['id' => $stu->id]) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-success">Restore</button>
+                        </form>
+                        @endif
+
 
                         </td>
                         <td>
                         <button type="submit" class="btn btn-primary">Update</button>
                         </td>
+                        
                     </tr>
                 @endforeach
             </tbody>

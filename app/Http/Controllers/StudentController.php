@@ -13,7 +13,8 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $student=Student::all();
+        $student=Student::withTrashed()->get();
+        
         return view('home',compact('student'));
     }
 
@@ -78,5 +79,19 @@ class StudentController extends Controller
         $student->delete();
 
         return redirect('students')->with('success', 'Student deleted successfully');
+    }
+    public function restore($id)
+    {
+        
+        $student = Student::withTrashed()->find($id);
+
+        if (!$student) {
+            return redirect()->back()->with('error', 'Student not found.');
+        }
+
+     
+        $student->restore();
+
+        return redirect()->back()->with('success', 'Student restored successfully.');
     }
 }
