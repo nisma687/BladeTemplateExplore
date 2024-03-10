@@ -11,15 +11,35 @@
   </head>
   <body>
       
-    <h1>
-        Hi welcome to the page ,
+    <div class="d-flex flex-row justify-content-around">
+    <h1 class="mt-3 mb-2 ">
         
+       Welcome to User Details Page 
     </h1>
-    <p>
+    <div class="mt-4">
+    <a 
+    class="btn btn-primary btn-sm"
+    href="/students/create" > Add new Student </a>
+    </div>
+    </div>
+    <div class=" p-4">
+    <p class="">
+    @if(session('success'))
+    <div class="alert alert-success" role="alert">
+    <hr>
+    <h5 class="text-center"> {{ session('success') }}</h5>
+    <hr>
+    </div>
+@elseif(session('error'))
+    <div class="alert alert-danger">
+    <h3 class="text-center"> {{ session('error') }}</h3>
+        
+    </div>
+@endif
     @if(isset($student) && $student->count() > 0)
-        <table class="table">
+        <table class="table table-hover table-info text-dark">
             <thead>
-                <tr>
+                <tr class="text-center">
                     <th>Name</th>
                     <th>Course</th>
                     <th>Class</th>
@@ -31,30 +51,38 @@
             <tbody>
                 @foreach($student as $stu)
                     <tr>
-                        <td>{{ $stu->name }}</td>
-                        <td>{{ $stu->course }}</td>
-                        <td>{{ $stu->class }}</td>
-                        <td>
-                        <form action="{{ url('/students', ['id' => $stu->id]) }}" method="POST">
+                        <td class="text-center font-italic">{{ $stu->name }}</td>
+                        <td class="text-center font-italic" >{{ $stu->course }}</td>
+                        <td class="text-center font-italic">{{ $stu->class }}</td>
+                        <td class="text-center font-italic">
+                        <form action="{{ url('students/destroyAndRestore', ['id' => $stu->id]) }}" method="POST">
                         @csrf
                         @method('DELETE')
                         @if($stu->deleted_at === null)
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button
+                        data-toggle="tooltip" title="Click to delete!!!!!"
+                         type="submit" class="btn btn-danger btn-sm">Delete</button>
                         @endif
                         </form>
 
                         @if($stu->deleted_at !== null)
-                        <form action="{{ url('/students/restore', ['id' => $stu->id]) }}" method="POST">
+                        <form action="{{ url('students/destroyAndRestore', ['id' => $stu->id]) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        <button type="submit" class="btn btn-success">Restore</button>
+                        <button 
+                        data-toggle="tooltip" title="Click to restore!!!!!"
+                        type="submit" class="btn btn-success btn-sm">Restore</button>
                         </form>
                         @endif
 
 
                         </td>
-                        <td>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <td class="text-center">
+                            
+                         <a 
+                         data-toggle="tooltip" title="Click to Update"
+                        class="btn btn-primary btn-sm"
+                        href="{{ url('/students/'.$stu->id.'/edit') }}" > Update</a>
                         </td>
                         
                     </tr>
@@ -65,15 +93,9 @@
         <p>No student data available.</p>
     @endif
     </p>
-    @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
     </div>
-@elseif(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
+    
+   
     
 
     
